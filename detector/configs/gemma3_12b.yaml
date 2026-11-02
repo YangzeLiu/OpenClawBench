@@ -1,0 +1,51 @@
+# Configuration of the released detector (Gemma 3 12B + LoRA, sixfold_rare head).
+# Data: per-model files produced from the HF release by
+#   python detector/scripts/prepare_public_split.py --split hf_data/data/train.jsonl --out work/train
+# Paths are relative to the repo root. The packet file's directory name is used as source_model.
+# max_normal_samples caps the normal class (class-balanced sampling); all anomalous rows are kept.
+# Effective batch size = per_device_train_batch_size x gradient_accumulation_steps x number of GPUs.
+# The paper's headline run used 8 GPUs: effective batch 1 x 4 x 8 = 32.
+base_model: google/gemma-3-12b-it
+chat_template: gemma
+
+silver_packets:
+  - work/train/glm-4.5-air-bfcl/annotation_input_packets.jsonl
+  - work/train/gpt-oss-20b-bfcl/annotation_input_packets.jsonl
+  - work/train/deepseek-r1-bfcl/annotation_input_packets.jsonl
+  - work/train/qwen3.5_9b-bfcl/annotation_input_packets.jsonl
+  - work/train/qwen3.6_27b-bfcl/annotation_input_packets.jsonl
+  - work/train/qwen3.6_35b_a3b-bfcl/annotation_input_packets.jsonl
+silver_annotations:
+  - work/train/glm-4.5-air-bfcl/final_annotations.jsonl
+  - work/train/gpt-oss-20b-bfcl/final_annotations.jsonl
+  - work/train/deepseek-r1-bfcl/final_annotations.jsonl
+  - work/train/qwen3.5_9b-bfcl/final_annotations.jsonl
+  - work/train/qwen3.6_27b-bfcl/final_annotations.jsonl
+  - work/train/qwen3.6_35b_a3b-bfcl/final_annotations.jsonl
+quality_filter: []
+dev_ratio: 0.05
+seed: 42
+
+lora_r: 32
+lora_alpha: 64
+lora_dropout: 0.05
+lora_target_modules: ["q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_proj"]
+
+output_dir: runs/gemma3_12b
+per_device_train_batch_size: 1
+gradient_accumulation_steps: 4
+num_train_epochs: 3.0
+learning_rate: 1.5e-4
+lr_scheduler_type: cosine
+warmup_ratio: 0.03
+max_seq_length: 8192
+bf16: true
+gradient_checkpointing: true
+dataloader_num_workers: 8
+save_steps: 80
+logging_steps: 10
+eval_steps: 80
+deepspeed: null
+group_by_length: true
+target_mode: sixfold_rare
+max_normal_samples: 6798

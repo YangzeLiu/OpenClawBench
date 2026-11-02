@@ -1,0 +1,14 @@
+torch>=2.4
+transformers>=5.0
+peft>=0.18
+accelerate>=0.34
+deepspeed>=0.15
+trl>=0.20
+liger-kernel>=0.5
+datasets>=2.21
+vllm>=0.19.1
+scikit-learn>=1.5
+openai>=1.40
+numpy>=1.26
+pyyaml>=6.0
+tqdm>=4.66
