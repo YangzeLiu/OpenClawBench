@@ -19,7 +19,7 @@ Code that turns raw agent runs into labeled trajectories. Labels were produced i
 
 Stage A (triage) reads the trajectory, routes it as anomalous or normal and proposes candidate subtypes. Stage B1 picks one subtype from the closed label set for anomalous routes. Stage B2 fills the structured fields (onset steps, severity, recoverability, evidence segments). Stage C verifies consistency and flags records for review. Each record is then assigned a quality tier (`taxonomy/fulltax_quality_tiers_definition_v1.md`).
 
-The pipeline works over the full 8-subtype candidate taxonomy. Three of those subtypes (`state_contamination`, `parallel_coordination_breakdown`, `ambiguity_mishandling`) received no instances, so the re-labeling prompt and the released labels use the remaining five.
+The pipeline works over the full 8-subtype candidate taxonomy. Three of those subtypes (`state_contamination`, `parallel_coordination_breakdown`, `ambiguity_mishandling`) were rare in the four-stage output (164 of 2,999 anomalous trajectories) and were dropped from the closed set, so the re-labeling prompt and the released labels use the remaining five.
 
 ## 5-class taxonomy (v3)
 
